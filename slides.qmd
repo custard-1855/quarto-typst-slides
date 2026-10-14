@@ -109,6 +109,57 @@ $$ {#eq-bayes}
 
 @eq-maxwell はマクスウェル方程式の一部、@eq-bayes はベイズの定理
 
+## 数理最適化: 最適輸送
+
+確率分布 $\mu$ を $\nu$ へ、コスト $c(x, y)$ の総和が最小になるように運ぶ [@villani2009]
+
+**Monge 問題**: 輸送写像 $T$ を求める
+
+$$
+\inf_{T \,:\, T_{\#}\mu = \nu} \int_X c(x, T(x)) \, d\mu(x)
+$$ {#eq-monge}
+
+**Kantorovich 緩和** (離散の場合): 輸送計画 $P$ を求める線形計画 [@peyre2019]
+
+$$
+\min_{P \in U(a, b)} \langle C, P \rangle, \quad
+U(a, b) = \left\{ P \in \mathbb{R}_{+}^{n \times m} \,\middle|\, P \mathbf{1}_m = a, \, P^\top \mathbf{1}_n = b \right\}
+$$ {#eq-kantorovich}
+
+## Wasserstein 距離と Sinkhorn 法
+
+コストを $d^p$ にした @eq-kantorovich の連続版が、分布間の距離を与える
+
+$$
+W_p(\mu, \nu) = \left( \inf_{\pi \in \Pi(\mu, \nu)} \int_{X \times Y} d(x, y)^p \, d\pi(x, y) \right)^{1/p}
+$$
+
+エントロピー正則化を加えると、行列のスケーリングの反復で解ける [@cuturi2013]
+
+:::: {.columns}
+
+::: {.column width="50%"}
+$$
+\min_{P \in U(a, b)} \langle C, P \rangle - \varepsilon H(P)
+$$
+
+$$
+H(P) = -\sum_{i,j} P_{ij} (\log P_{ij} - 1)
+$$
+:::
+
+::: {.column width="50%"}
+$$
+P^\star = \mathrm{diag}(u) \, K \, \mathrm{diag}(v), \quad K = e^{-C / \varepsilon}
+$$
+
+$$
+u \leftarrow a \oslash (K v), \quad v \leftarrow b \oslash (K^\top u)
+$$
+:::
+
+::::
+
 # Typst の機能を使う
 
 ## 段階表示
