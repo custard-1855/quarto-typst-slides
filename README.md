@@ -10,9 +10,35 @@ Markdown (Quarto) で書いて、Typst + [Touying](https://touying-typ.github.io
 - pdfpc (発表するときだけ): `brew install pdfpc`
 - make
 
+## セットアップ
+
+Mac で、何も入っていない状態からコマンドで始める手順です。`my-talk` は好きなリポジトリ名に変えてください。
+
+```sh
+# 1. Homebrew を入れる (git と make もこのとき一緒に入る)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# 2. Quarto・pdfpc・GitHub CLI を入れる
+brew install --cask quarto
+brew install pdfpc gh
+
+# 3. GitHub にログインし、このテンプレートから発表用のリポジトリを作る
+gh auth login
+gh repo create my-talk --template custard-1855/quarto-typst-slides --private --clone
+cd my-talk
+
+# 4. ビルドして PDF を開く
+make
+open slides.pdf
+```
+
+- Homebrew がすでにあるなら 1 は飛ばします。1 の `eval` の行は、インストーラが最後に表示する「Next steps」の指示と同じものです。新しいターミナルでも `brew` を使えるようにするには、その指示どおり `~/.zprofile` にも書き足します
+- 最初の `make` で Touying が自動でダウンロードされるので、ネットにつながった状態で実行します
+
 ## 使い方
 
-1. GitHub で「Use this template」から新しいリポジトリを作る
+1. GitHub で「Use this template」から新しいリポジトリを作る (コマンドで作るなら「セットアップ」の 3)
 2. `slides.qmd` の先頭 (タイトル・発表者名・日付・発表時間) を書き換え、本文を書く
 3. ビルドして発表する
 
