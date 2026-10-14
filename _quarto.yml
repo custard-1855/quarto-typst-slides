@@ -1,0 +1,16 @@
+# 出力形式の設定。スライドごとに変えるもの (タイトルなど) は slides.qmd の先頭に書く
+project:
+  type: default
+  render:
+    - slides.qmd
+
+filters:
+  - typst/filters.lua
+
+format:
+  typst:
+    keep-typ: true  # pdfpc 用ファイルを .typ から取り出すので残す
+    template-partials:
+      - typst/typst-template.typ
+      - typst/page.typ
+      - typst/typst-show.typ

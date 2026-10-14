@@ -1,0 +1,11 @@
+# 生成物 (make で作り直せる)
+*.pdf
+*.typ
+!typst/*.typ
+*.pdfpc
+
+# Quarto のキャッシュ
+/.quarto/
+*_files/
+
+**/*.quarto_ipynb
