@@ -1,5 +1,6 @@
 # 生成物 (make で作り直せる)
 *.pdf
+!docs/sample.pdf
 *.typ
 !typst/*.typ
 *.pdfpc

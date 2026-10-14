@@ -32,6 +32,12 @@ $endif$
 // 出典表記。slides.qmd では `#src[〇〇より]`{=typst} のように書く
 #let src(body) = text(size: 12pt, fill: gray)[出典: #body]
 
+$if(csl)$
+#set bibliography(style: "$csl$")
+$elseif(bibliographystyle)$
+#set bibliography(style: "$bibliographystyle$")
+$endif$
+
 $if(pdfpc-duration)$
 // pdfpc のタイマー (分)
 #pdfpc.config(duration-minutes: $pdfpc-duration$)

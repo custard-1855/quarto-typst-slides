@@ -2,6 +2,8 @@
 
 Markdown (Quarto) で書いて、Typst + [Touying](https://touying-typ.github.io/) で PDF のスライドを作るテンプレートです。発表には [pdfpc](https://pdfpc.github.io/) を使い、発表者画面にスピーカーノート・次のスライド・タイマーを表示します。
 
+このテンプレートのサンプルスライドをビルドした PDF: [docs/sample.pdf](docs/sample.pdf)
+
 ## 必要なもの
 
 - [Quarto](https://quarto.org/) 1.9 以降 (Typst は Quarto に同梱されている)
@@ -33,11 +35,22 @@ make clean    # 生成物を削除
 | スライド 1 枚 | `## 見出し` |
 | 2段組 | `:::: {.columns}` の中に `::: {.column width="50%"}` を並べる |
 | 段階表示 | `` `#pause`{=typst} `` |
+| 文献の引用 | `[@knuth1984]` (文献は `references.bib` に書く) |
+| 参考文献の一覧 | `::: {#refs}` と `:::` を置いたスライドに出る |
 | 出典表記 | `` `#src[〇〇より]`{=typst} `` |
 | スピーカーノート | `::: {.notes}` |
 | Typst を直接書く | ` ```{=typst} ` のコードブロック |
 
 スピーカーノートはスライドには表示されず、pdfpc の発表者画面にだけ出ます。
+
+### 文献の引用
+
+BibTeX の文献を `references.bib` に書き、`slides.qmd` で `[@キー]` のように引用します。組版は Typst が行います (Pandoc の citeproc は使わない)。
+
+- 文献スタイルは `slides.qmd` の先頭で `bibliographystyle: apa` のように指定します。省略すると番号式の `ieee` です。指定できる名前は [Typst のドキュメント](https://typst.app/docs/reference/model/bibliography/) にあります。`csl: 〇〇.csl` で CSL ファイルも使えます
+- 一覧は `::: {#refs}` を置いたスライドに出ます。置かなければ最後のスライドの末尾に出ます
+- 日本語の著者名は `author = {{山田 太郎}}` のように二重の括弧で囲みます。囲まないと「名 姓」の順と解釈され、「太郎」のように表示されます
+- 文献をスライドの下に出典として添えるなら `` `#src[#cite(<キー>, form: "full")]`{=typst} `` と書きます
 
 ## pdfpc の操作
 
@@ -61,11 +74,14 @@ _quarto.yml              出力形式の設定
 typst/typst-show.typ     テーマ・フォント・出典表記などの設定
 typst/typst-template.typ Touying の読み込み
 typst/page.typ           (空: ページ設定は Touying が行う)
-typst/filters.lua        .notes と .columns を Typst に変換する
+typst/biblio.typ         参考文献の一覧の出し方 (Quarto の標準を上書き)
+typst/filters.lua        .notes・.columns・#refs を Typst に変換する
+references.bib           参考文献
 images/                  画像置き場
 Makefile                 ビルドと発表のコマンド
 .github/workflows/       GitHub Actions で PDF をビルド
 CLAUDE.md                Claude Code 向けの指示
+docs/sample.pdf          サンプルスライドの PDF (make sample で更新)
 docs/kickoff.md          メモから初稿を作るときの手順 (Claude Code が質問しながら進める)
 ```
 

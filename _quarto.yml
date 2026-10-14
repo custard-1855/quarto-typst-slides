@@ -14,3 +14,4 @@ format:
       - typst/typst-template.typ
       - typst/page.typ
       - typst/typst-show.typ
+      - typst/biblio.typ

@@ -9,10 +9,7 @@ local function column_width(col)
   return "1fr"
 end
 
-function Div(el)
-  if not FORMAT:match("typst") then
-    return nil
-  end
+local function convert_div(el)
 
   -- `::: {.notes}` → Touying の #speaker-note[...] (pdfpc の発表者画面に表示される)
   if el.classes:includes("notes") then
@@ -40,3 +37,38 @@ function Div(el)
     return blocks
   end
 end
+
+-- `::: {#refs}` を置いたスライドに参考文献の一覧を出す。
+-- 置かなければ Quarto の標準どおり末尾に出す (typst/biblio.typ)
+local function place_bibliography(doc)
+  local bib = doc.meta.bibliography
+  if not bib then
+    return nil
+  end
+  local paths = {}
+  for _, b in ipairs(bib.t == "MetaList" and bib or { bib }) do
+    table.insert(paths, '"' .. pandoc.utils.stringify(b) .. '"')
+  end
+  local placed = false
+  doc.blocks = doc.blocks:walk({
+    Div = function(el)
+      if el.identifier == "refs" then
+        placed = true
+        -- タイトルはスライドの見出しがあるので出さない
+        return pandoc.RawBlock("typst",
+          "#bibliography((" .. table.concat(paths, ", ") .. ",), title: none)")
+      end
+    end,
+  })
+  doc.meta["refs-placed"] = placed
+  return doc
+end
+
+if not FORMAT:match("typst") then
+  return {}
+end
+
+return {
+  { Div = convert_div },
+  { Pandoc = place_bibliography },
+}
